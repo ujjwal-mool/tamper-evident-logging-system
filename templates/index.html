@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Secure Log Console | Tamper-Evident Logging System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <h1>Secure Log Console</h1>
+      <p>Tamper-Evident Logging</p>
+    </div>
+  </div>
+  <div id="status-badge" class="status-badge status-idle">
+    <span class="dot"></span>
+    <span id="status-label">System Ready</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="ping"></span>
+    System Online
+  </div>
+  <h2>Secure Log Console</h2>
+  <p class="hero-sub">Tamper-Evident Logging System for Forensic Analysis</p>
+  <p class="hero-desc">
+    Upload and verify log files using cryptographic hash chaining. 
+    Detect any unauthorized modification, deletion, or injection of logs with mathematical certainty.
+  </p>
+  <button class="btn-primary" onclick="document.getElementById('upload-wrap').scrollIntoView({behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+    Upload Log File
+  </button>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(167,139,250,0.12)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+      </div>
+      <h3>SHA-256 Hash Chaining</h3>
+      <p>Each log entry is cryptographically linked to the previous one, creating an unbreakable chain of integrity.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(94,234,212,0.12)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+      </div>
+      <h3>Instant Detection</h3>
+      <p>Any modification, deletion, or insertion of logs is immediately detectable during verification.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(129,140,248,0.12)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <h3>Forensic Ready</h3>
+      <p>Provides verifiable proof of tampering for legal proceedings and security investigations.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════ UPLOAD ═══════════════════════════════════════ -->
+<section class="section" id="upload-wrap">
+  <div id="upload-section">
+    <div class="section-label" style="justify-content:center;flex-direction:column;align-items:center;text-align:center;margin-bottom:32px">
+      <h2 style="font-size:24px;font-weight:700;margin-bottom:6px">Upload Log File</h2>
+      <p style="color:var(--muted);font-size:14px">Drag and drop your log file or click to browse</p>
+    </div>
+
+    <div id="dropzone" class="dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave()" ondrop="handleDrop(event)">
+      <input type="file" accept=".log,.txt,.csv" onchange="handleFileChange(event)" id="file-input" />
+      <div id="dropzone-content">
+        <div class="dropzone-icon" style="background:var(--surface2)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <div class="dropzone-text">
+          <strong>Drop your file here, or click to browse</strong>
+          <span>Supports .log, .txt, .csv files</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="format-chips">
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        .log
+      </span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        .txt
+      </span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        .csv
+      </span>
+    </div>
+
+    <div class="info-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      Currently optimized for sample testing datasets. Database-scale ingestion coming soon.
+    </div>
+
+    <button class="btn-verify" id="verify-btn" onclick="startVerification()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span id="verify-btn-label">Start Verification</span>
+    </button>
+  </div>
+</section>
+
+<!-- ═══ ADD LOG ENTRY ═══ -->
+<section class="section" id="addlog-section-wrap">
+  <div style="max-width:680px;margin:0 auto">
+    <div class="section-label" style="justify-content:center;flex-direction:column;align-items:center;text-align:center;margin-bottom:24px">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:6px">Add Log Entry</h2>
+      <p style="color:var(--muted);font-size:14px">Append a new entry to the server log, then seal with hash chain</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:12px">
+      <input id="log-event-type" type="text" placeholder="Event type (e.g. LOGIN)"
+        style="padding:12px 16px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--border2);color:var(--fg);font-family:var(--font-mono);font-size:13px;outline:none;width:100%"/>
+      <input id="log-message" type="text" placeholder="Log message"
+        style="padding:12px 16px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--border2);color:var(--fg);font-family:var(--font-sans);font-size:13px;outline:none;width:100%"/>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button onclick="addLog()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:var(--radius);background:linear-gradient(135deg,var(--lavender),var(--periwinkle));color:#0F0D17;font-weight:700;font-size:14px;border:none;cursor:pointer;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Log
+      </button>
+      <button onclick="applyHashChain()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--border2);color:var(--teal);font-weight:700;font-size:14px;cursor:pointer;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        Apply Hash Chain
+      </button>
+    </div>
+    <div id="addlog-msg" style="margin-top:12px;font-size:13px;font-family:var(--font-mono);color:var(--muted);text-align:center;min-height:20px"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════ ALERTS ═══════════════════════════════════════ -->
+<section class="section hidden" id="alerts-section-wrap">
+  <div id="alerts-section">
+    <div class="section-label">
+      <div class="section-label-icon" style="background:rgba(251,113,133,0.15)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div>
+        <h2>Security Alerts</h2>
+        <p id="alert-count-label">0 integrity violations detected</p>
+      </div>
+    </div>
+    <div class="alerts-grid" id="alerts-grid"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ DASHBOARD ═══════════════════════════════════════ -->
+<section class="section hidden" id="dashboard-section-wrap">
+  <div id="dashboard-section">
+    <div class="flex-between" style="margin-bottom:24px;flex-wrap:wrap;gap:16px">
+      <div>
+        <h2 style="font-size:20px;font-weight:700">Log Analysis Dashboard</h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px">Analyze log entries and their cryptographic chain integrity</p>
+      </div>
+      <div class="view-toggle">
+        <button class="toggle-btn" id="toggle-raw" onclick="setViewMode('raw')">Raw Logs</button>
+        <button class="toggle-btn active" id="toggle-verified" onclick="setViewMode('verified')">Verified Logs</button>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Log Entries Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-icon" style="background:rgba(167,139,250,0.15)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+            </div>
+            <span class="panel-title">Log Entries</span>
+          </div>
+          <span id="log-count-badge" class="mini-badge" style="background:var(--surface2);color:var(--muted)">0 entries</span>
+        </div>
+        <div class="panel-body" id="log-entries-panel"></div>
+      </div>
+
+      <!-- Hash Chain Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-icon" style="background:rgba(94,234,212,0.15)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+              </svg>
+            </div>
+            <span class="panel-title">Hash Chain</span>
+          </div>
+          <span class="mini-badge" style="background:rgba(94,234,212,0.12);color:#5EEAD4">SHA-256</span>
+        </div>
+        <div class="panel-body" id="hash-chain-panel"></div>
+      </div>
+
+      <!-- Verification Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-icon" style="background:rgba(129,140,248,0.15)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <span class="panel-title">Verification Status</span>
+          </div>
+        </div>
+        <div class="verif-body" id="verification-panel">
+          <div class="verif-icon-wrap" style="background:rgba(61,53,84,0.8)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <div class="verif-status-title" style="color:var(--muted)">Awaiting Verification</div>
+            <div class="verif-status-sub">Upload a log file to begin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ AUDIT REPORT ═══════════════════════════════════════ -->
+<section class="section hidden" id="audit-section-wrap">
+  <div id="audit-section">
+    <div class="flex-between" style="flex-wrap:wrap;gap:16px;margin-bottom:8px">
+      <div class="section-label" style="margin-bottom:0">
+        <div class="section-label-icon" style="background:rgba(129,140,248,0.15)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Audit Report</h2>
+          <p>Verification summary and statistics</p>
+        </div>
+      </div>
+      <button class="btn-download" onclick="downloadReport()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download Report
+      </button>
+    </div>
+
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="summary-box" id="summary-box"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════ PIPELINE ═══════════════════════════════════════ -->
+<section class="section" id="pipeline-section">
+  <div class="section-label" style="justify-content:center;flex-direction:column;align-items:center;text-align:center;margin-bottom:40px">
+    <h2 style="font-size:22px;font-weight:700;margin-bottom:6px">Continuous Hashing & Forensic Pipeline</h2>
+    <p style="color:var(--muted);font-size:14px;max-width:560px">A scalable approach to maintaining log integrity across multiple verification cycles</p>
+  </div>
+
+  <div class="pipeline-grid">
+    <div class="pipeline-card">
+      <div class="pipeline-card-icon" style="background:rgba(61,53,84,0.8)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+      <div class="pipeline-step">Step 1</div>
+      <h4>Upload Data</h4>
+      <p>Upload .csv, .log, or .txt files</p>
+    </div>
+    <div class="pipeline-card">
+      <div class="pipeline-card-icon" style="background:rgba(61,53,84,0.8)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg></div>
+      <div class="pipeline-step">Step 2</div>
+      <h4>Preprocessing</h4>
+      <p>Assign timestamps and unique IDs</p>
+    </div>
+    <div class="pipeline-card">
+      <div class="pipeline-card-icon" style="background:rgba(61,53,84,0.8)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <div class="pipeline-step">Step 3</div>
+      <h4>Hash Generation</h4>
+      <p>Apply SHA-256 hashing</p>
+    </div>
+    <div class="pipeline-card">
+      <div class="pipeline-card-icon" style="background:rgba(61,53,84,0.8)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>
+      <div class="pipeline-step">Step 4</div>
+      <h4>Hash Chaining</h4>
+      <p>Link logs using previous hash</p>
+    </div>
+    <div class="pipeline-card">
+      <div class="pipeline-card-icon" style="background:rgba(61,53,84,0.8)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <div class="pipeline-step">Step 5</div>
+      <h4>Verification Engine</h4>
+      <p>Recompute and validate chain</p>
+    </div>
+    <div class="pipeline-card">
+      <div class="pipeline-card-icon" style="background:rgba(61,53,84,0.8)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+      <div class="pipeline-step">Step 6</div>
+      <h4>Tamper Detection</h4>
+      <p>Detect modification / deletion / insertion</p>
+    </div>
+    <div class="pipeline-card">
+      <div class="pipeline-card-icon" style="background:rgba(61,53,84,0.8)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+      <div class="pipeline-step">Step 7</div>
+      <h4>Export Hashed Data</h4>
+      <p>Download verified logs</p>
+    </div>
+    <div class="pipeline-card highlight">
+      <div class="pipeline-card-icon" style="background:rgba(167,139,250,0.2)"><svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></div>
+      <div class="pipeline-step">Step 8 <span class="key-badge">Key</span></div>
+      <h4>Re-Ingestion Loop</h4>
+      <p>Re-upload logs and extend chain</p>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:24px">
+    <span class="loop-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+      Continuous Integrity Loop
+    </span>
+  </div>
+
+  <div style="margin-top:24px;padding:24px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border)">
+    <p style="text-align:center;color:var(--muted);font-size:14px;line-height:1.8;max-width:780px;margin:0 auto">
+      This system enables continuous log integrity by allowing hashed data to be exported, reused, and re-ingested. 
+      Each cycle extends the hash chain, ensuring that logs remain tamper-evident over time. 
+      This creates a scalable forensic pipeline where data can be repeatedly verified, monitored, and secured.
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════ INFO SECTION ═══════════════════════════════════════ -->
+<section class="section" id="info-section">
+  <div class="info-grid">
+    <!-- Design Decisions -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <div class="info-card-icon" style="background:rgba(167,139,250,0.15)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h3>Design Decisions</h3>
+      </div>
+      <div class="info-item"><h4>SHA-256 Hashing</h4><p>Chosen for simplicity and reliability across platforms</p></div>
+      <div class="info-item"><h4>File-Based Input</h4><p>Used for easy testing and demonstration purposes</p></div>
+      <div class="info-item"><h4>Linear Chaining</h4><p>Used for clarity over complexity in chain visualization</p></div>
+    </div>
+
+    <!-- Limitations -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <div class="info-card-icon" style="background:rgba(251,113,133,0.15)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h3>Limitations</h3>
+      </div>
+      <div class="limit-item"><span class="limit-dot"></span><span>Detects tampering but does not prevent it</span></div>
+      <div class="limit-item"><span class="limit-dot"></span><span>Performance may degrade with very large logs</span></div>
+      <div class="limit-item"><span class="limit-dot"></span><span>Currently not real-time</span></div>
+      <div class="limit-item"><span class="limit-dot"></span><span>Requires manual re-ingestion for continuous chaining</span></div>
+    </div>
+
+    <!-- System Status -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <div class="info-card-icon" style="background:rgba(94,234,212,0.15)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3>System Status</h3>
+      </div>
+      <div class="status-item">
+        <span class="status-item-label">Mode</span>
+        <span class="status-item-val" style="color:var(--periwinkle)">Test Mode</span>
+      </div>
+      <div class="status-item">
+        <span class="status-item-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Status
+        </span>
+        <span class="status-item-val" id="info-status">Idle</span>
+      </div>
+      <div class="status-item">
+        <span class="status-item-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Last Run
+        </span>
+        <span class="status-item-val" id="info-last-run" style="color:var(--fg)">—</span>
+      </div>
+      <div class="status-item">
+        <span class="status-item-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+          Logs Processed
+        </span>
+        <span class="status-item-val" id="info-logs" style="color:var(--fg)">0</span>
+      </div>
+      <div class="status-item">
+        <span class="status-item-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          Chain Length
+        </span>
+        <span class="status-item-val" id="info-chain" style="color:var(--fg)">0</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>Secure Log Console</h1>
+        </div>
+      </div>
+      <p>A tamper-evident logging system for secure forensic analysis using cryptographic hash chaining.</p>
+    </div>
+    <div class="footer-col">
+      <h3>Key Features</h3>
+      <ul class="footer-list">
+        <li>
+          <span class="footer-list-icon" style="background:rgba(167,139,250,0.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+          SHA-256 Hash Chaining
+        </li>
+        <li>
+          <span class="footer-list-icon" style="background:rgba(94,234,212,0.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+          Tamper Detection
+        </li>
+        <li>
+          <span class="footer-list-icon" style="background:rgba(129,140,248,0.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+          Forensic Analysis Ready
+        </li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Technology</h3>
+      <ul class="footer-list">
+        <li>
+          <span class="footer-list-icon" style="background:rgba(134,239,172,0.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#86EFAC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+          HTML / CSS / JavaScript
+        </li>
+        <li>
+          <span class="footer-list-icon" style="background:rgba(134,239,172,0.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#86EFAC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+          SHA-256 Cryptography
+        </li>
+        <li>
+          <span class="footer-list-icon" style="background:rgba(134,239,172,0.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#86EFAC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+          Hash Chain Verification
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; <span id="year"></span> Secure Log Console. Mini Project — Department of Computer Science and Business Systems, Dayananda Sagar College of Engineering.</p>
+    <p style="margin-top:6px;font-size:11px">Built by Ujjwal Moolchandani, Nimai R, Shreya M, Shreesha Gowda</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════ JAVASCRIPT ═══════════════════════════════════════ -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
